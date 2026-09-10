@@ -1,706 +1,83 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: #f6f7f9;
-    color: #17181a;
-  }
-
-  .container {
-    max-width: 1050px;
-    margin: 0 auto;
-    padding: 30px 18px 50px;
-  }
-
-  /* HEADER */
-
-  .hero {
-    text-align: center;
-    padding: 25px 10px 30px;
-  }
-
-  .hero-icon {
-    font-size: 48px;
-    margin-bottom: 5px;
-  }
-
-  .hero h1 {
-    margin: 0;
-    font-size: clamp(28px, 5vw, 42px);
-    font-weight: 800;
-    letter-spacing: -1px;
-  }
-
-  .hero p {
-    margin: 10px auto 0;
-    max-width: 650px;
-    color: #666;
-    font-size: 16px;
-    line-height: 1.5;
-  }
-
-  /* FILTERS */
-
-  .filters {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(246,247,249,0.94);
-    backdrop-filter: blur(12px);
-    padding: 12px 0 16px;
-  }
-
-  .search {
-    width: 100%;
-    padding: 13px 16px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 15px;
-    outline: none;
-    background: white;
-    margin-bottom: 12px;
-  }
-
-  .search:focus {
-    border-color: #888;
-  }
-
-  .filter-row {
-    display: flex;
-    gap: 7px;
-    overflow-x: auto;
-    padding-bottom: 3px;
-    scrollbar-width: none;
-  }
-
-  .filter-row::-webkit-scrollbar {
-    display: none;
-  }
-
-  .filter-btn {
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 999px;
-    padding: 8px 14px;
-    font-size: 13px;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: 0.15s;
-  }
-
-  .filter-btn:hover {
-    background: #eee;
-  }
-
-  .filter-btn.active {
-    background: #17181a;
-    color: white;
-    border-color: #17181a;
-  }
-
-  /* GROUP GRID */
-
-  .groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
-    gap: 15px;
-    margin-top: 10px;
-  }
-
-  /* CARD */
-
-  .card {
-    background: white;
-    border: 1px solid #e5e5e5;
-    border-radius: 17px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.035);
-    transition: transform 0.15s, box-shadow 0.15s;
-  }
-
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .group-name {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font-size: 20px;
-    font-weight: 750;
-  }
-
-  .group-icon {
-    font-size: 23px;
-  }
-
-  .instagram {
-    text-decoration: none;
-    font-size: 13px;
-    color: #666;
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
-    padding: 6px 8px;
-    white-space: nowrap;
-  }
-
-  .instagram:hover {
-    background: #f1f1f1;
-    color: #111;
-  }
-
-  /* EVENTS */
-
-  .event {
-    border-top: 1px solid #eee;
-    padding: 14px 0 2px;
-  }
-
-  .event:first-child {
-    border-top: none;
-    padding-top: 0;
-  }
-
-  .event-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 7px;
-  }
-
-  .day {
-    font-size: 15px;
-    font-weight: 750;
-  }
-
-  .time {
-    font-size: 15px;
-    font-weight: 700;
-    color: #333;
-  }
-
-  .level {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 5px 9px;
-    border-radius: 999px;
-    margin-bottom: 7px;
-  }
-
-  /* LEVEL COLORS */
-
-  .beginner {
-    background: #e5f6e9;
-    color: #19713a;
-  }
-
-  .intermediate {
-    background: #fff2cf;
-    color: #855d00;
-  }
-
-  .advanced {
-    background: #ffe2e2;
-    color: #a32929;
-  }
-
-  .mixed {
-    background: #e9e4ff;
-    color: #5742a5;
-  }
-
-  .warning {
-    font-size: 11px;
-    color: #8a6500;
-    background: #fff8df;
-    border-radius: 7px;
-    padding: 7px 9px;
-    line-height: 1.4;
-  }
-
-  /* EMPTY */
-
-  .empty {
-    text-align: center;
-    padding: 50px 20px;
-    color: #777;
-    display: none;
-  }
-
-  /* FOOTER */
-
-  .footer {
-    text-align: center;
-    margin-top: 35px;
-    color: #888;
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-  @media (max-width: 600px) {
-    .container {
-      padding: 20px 12px 40px;
-    }
-
-    .groups {
-      grid-template-columns: 1fr;
-    }
-
-    .card {
-      padding: 17px;
-    }
-
-    .hero {
-      padding-top: 10px;
-    }
-  }
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-  <section class="hero">
-    <div class="hero-icon">🛼</div>
-    <h1>Inline Skating Groups</h1>
-    <p>
-      Buenos Aires 🇦🇷<br>
-      Urban inline skating groups, meeting points, levels and schedules.
-    </p>
-  </section>
-
-  <section class="filters">
-
-    <input
-      id="search"
-      class="search"
-      type="text"
-      placeholder="🔎 Search a group..."
-      oninput="render()"
-    >
-
-    <div class="filter-row" id="dayFilters">
-      <button class="filter-btn active" onclick="setDay('All', this)">All</button>
-      <button class="filter-btn" onclick="setDay('Monday', this)">Monday</button>
-      <button class="filter-btn" onclick="setDay('Tuesday', this)">Tuesday</button>
-      <button class="filter-btn" onclick="setDay('Wednesday', this)">Wednesday</button>
-      <button class="filter-btn" onclick="setDay('Thursday', this)">Thursday</button>
-      <button class="filter-btn" onclick="setDay('Friday', this)">Friday</button>
-      <button class="filter-btn" onclick="setDay('Saturday', this)">Saturday</button>
-      <button class="filter-btn" onclick="setDay('Sunday', this)">Sunday</button>
-    </div>
-
-    <div class="filter-row" style="margin-top:7px;" id="levelFilters">
-      <button class="filter-btn active" onclick="setLevel('All', this)">All levels</button>
-      <button class="filter-btn" onclick="setLevel('Beginner', this)">🟢 Beginner</button>
-      <button class="filter-btn" onclick="setLevel('Intermediate', this)">🟡 Intermediate</button>
-      <button class="filter-btn" onclick="setLevel('Advanced', this)">🔴 Advanced</button>
-    </div>
-
-  </section>
-
-  <div id="groups" class="groups"></div>
-
-  <div id="empty" class="empty">
-    <div style="font-size:35px;">🛼</div>
-    <p>No groups found.</p>
-  </div>
-
-  <div class="footer">
-    Information may change. Check each group's Instagram before attending.
-  </div>
-
-</div>
-
-
-<script>
-
-const groups = [
-
-  {
-    name: "Titanic",
-    icon: "🚢",
-    instagram: "saletitanic",
-    events: [
-      {
-        day: "Monday",
-        level: "Intermediate / Advanced",
-        time: "20:30"
-      },
-      {
-        day: "Tuesday",
-        level: "Beginner",
-        time: "20:30",
-        warning: "May change — check Instagram before going."
-      }
-    ]
-  },
-
-  {
-    name: "Proyecto",
-    icon: "🛼",
-    instagram: "proyectorollers",
-    events: [
-      {
-        day: "Wednesday",
-        level: "Intermediate",
-        time: "22:00"
-      }
-    ]
-  },
-
-  {
-    name: "Babyrollers",
-    icon: "👶",
-    instagram: "baby_rollers",
-    events: [
-      {
-        day: "Wednesday",
-        level: "Intermediate",
-        time: "20:00"
-      }
-    ]
-  },
-
-  {
-    name: "Monkeys",
-    icon: "🐒",
-    instagram: "roller.monkeys",
-    events: [
-      {
-        day: "Thursday",
-        level: "Intermediate",
-        time: "20:00"
-      },
-      {
-        day: "Sunday",
-        level: "Intermediate",
-        time: "17:00"
-      }
-    ]
-  },
-
-  {
-    name: "Patinday",
-    icon: "🛼",
-    instagram: "patinday",
-    events: [
-      {
-        day: "Saturday",
-        level: "Intermediate",
-        time: "15:15"
-      }
-    ]
-  },
-
-  {
-    name: "VDF",
-    icon: "⚡",
-    instagram: "vdf_pel",
-    events: [
-      {
-        day: "Friday",
-        level: "Advanced",
-        time: "20:15"
-      }
-    ]
-  },
-
-  {
-    name: "Limbo",
-    icon: "🌑",
-    instagram: "el.limbo_patin.urbano",
-    events: [
-      {
-        day: "Tuesday",
-        level: "Advanced",
-        time: "20:30"
-      },
-      {
-        day: "Thursday",
-        level: "Advanced",
-        time: "20:30"
-      }
-    ]
-  },
-
-  {
-    name: "Que Salida",
-    icon: "🛣️",
-    instagram: "que.salida",
-    events: [
-      {
-        day: "Friday",
-        level: "Intermediate",
-        time: "20:30"
-      }
-    ]
-  },
-
-  {
-    name: "Visio",
-    icon: "👁️",
-    instagram: "viciorollers",
-    events: [
-      {
-        day: "Sunday",
-        level: "Intermediate",
-        time: "16:30"
-      }
-    ]
-  },
-
-  {
-    name: "Rinconcito",
-    icon: "🌿",
-    instagram: "elrinconcitopel",
-    events: [
-      {
-        day: "Wednesday",
-        level: "Beginner",
-        time: "18:45"
-      },
-      {
-        day: "Saturday",
-        level: "Beginner",
-        time: "15:30"
-      }
-    ]
-  },
-
-  {
-    name: "Moondiola",
-    icon: "🌙",
-    instagram: "la.moondiola.patin.urbano",
-    events: [
-      {
-        day: "Monday",
-        level: "Intermediate",
-        time: "21:00"
-      },
-      {
-        day: "Wednesday",
-        level: "Advanced",
-        time: "21:00"
-      }
-    ]
-  },
-
-  {
-    name: "BDM",
-    icon: "🏙️",
-    instagram: "bdmrollers",
-    events: [
-      {
-        day: "Monday",
-        level: "Beginner / Intermediate",
-        time: "20:30"
-      },
-      {
-        day: "Wednesday",
-        level: "Intermediate",
-        time: "20:30"
-      }
-    ]
-  }
-
-];
-
-
-let selectedDay = "All";
-let selectedLevel = "All";
-
-
-function getLevelClass(level) {
-
-  if (level === "Beginner")
-    return "beginner";
-
-  if (level === "Intermediate")
-    return "intermediate";
-
-  if (level === "Advanced")
-    return "advanced";
-
-  return "mixed";
-}
-
-
-function eventMatchesLevel(event) {
-
-  if (selectedLevel === "All")
-    return true;
-
-  return event.level.includes(selectedLevel);
-}
-
-
-function setDay(day, button) {
-
-  selectedDay = day;
-
-  document
-    .querySelectorAll("#dayFilters .filter-btn")
-    .forEach(btn => btn.classList.remove("active"));
-
-  button.classList.add("active");
-
-  render();
-}
-
-
-function setLevel(level, button) {
-
-  selectedLevel = level;
-
-  document
-    .querySelectorAll("#levelFilters .filter-btn")
-    .forEach(btn => btn.classList.remove("active"));
-
-  button.classList.add("active");
-
-  render();
-}
-
-
-function render() {
-
-  const container = document.getElementById("groups");
-  const empty = document.getElementById("empty");
-  const search = document
-    .getElementById("search")
-    .value
-    .toLowerCase()
-    .trim();
-
-  container.innerHTML = "";
-
-  let visibleGroups = 0;
-
-  groups.forEach(group => {
-
-    const nameMatches =
-      group.name.toLowerCase().includes(search);
-
-    const matchingEvents = group.events.filter(event => {
-
-      const dayMatches =
-        selectedDay === "All" ||
-        event.day === selectedDay;
-
-      const levelMatches =
-        eventMatchesLevel(event);
-
-      return dayMatches && levelMatches;
-    });
-
-    if (!nameMatches && matchingEvents.length === 0)
-      return;
-
-    if (matchingEvents.length === 0)
-      return;
-
-    visibleGroups++;
-
-    let eventsHTML = "";
-
-    matchingEvents.forEach(event => {
-
-      eventsHTML += `
-        <div class="event">
-
-          <div class="event-top">
-
-            <div class="day">
-              ${event.day}
-            </div>
-
-            <div class="time">
-              🕐 ${event.time}
-            </div>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roller Groups BA</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-badge">🛼</div>
+        <h1>Roller Groups BA</h1>
+        <p>
+          Discover roller skating meetups in Buenos Aires with schedules, levels,
+          locations, and an interactive map so you never miss a session.
+        </p>
+      </header>
+
+      <main class="content">
+        <section class="map-panel panel">
+          <div class="section-heading">
+            <h2>Routes map</h2>
+            <a
+              class="map-link"
+              href="https://www.google.com/maps/d/u/0/viewer?mid=1amMKFPvvDQj1IxzfszknTSCP5VmmN9c&usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open full map
+            </a>
           </div>
 
-          <div>
-            <span class="level ${getLevelClass(event.level)}">
-              🎯 ${event.level}
-            </span>
+          <iframe
+            class="map-frame"
+            src="https://www.google.com/maps/d/u/0/embed?mid=1amMKFPvvDQj1IxzfszknTSCP5VmmN9c&ehbc=2E312F"
+            loading="lazy"
+            title="Interactive map of roller skating routes in Buenos Aires"
+          ></iframe>
+        </section>
+
+        <section class="toolbar panel">
+          <input
+            id="searchInput"
+            class="search-input"
+            type="text"
+            placeholder="Search group, day or level..."
+            aria-label="Search group"
+          />
+
+          <div class="filter-group" id="dayFilters">
+            <button class="filter-btn active" type="button" onclick="setDay('All', this)">All</button>
+            <button class="filter-btn" type="button" onclick="setDay('Monday', this)">Monday</button>
+            <button class="filter-btn" type="button" onclick="setDay('Tuesday', this)">Tuesday</button>
+            <button class="filter-btn" type="button" onclick="setDay('Wednesday', this)">Wednesday</button>
+            <button class="filter-btn" type="button" onclick="setDay('Thursday', this)">Thursday</button>
+            <button class="filter-btn" type="button" onclick="setDay('Friday', this)">Friday</button>
+            <button class="filter-btn" type="button" onclick="setDay('Saturday', this)">Saturday</button>
+            <button class="filter-btn" type="button" onclick="setDay('Sunday', this)">Sunday</button>
           </div>
 
-          ${
-            event.warning
-              ? `<div class="warning">⚠️ ${event.warning}</div>`
-              : ""
-          }
+          <div class="filter-group" id="levelFilters">
+            <button class="filter-btn active" type="button" onclick="setLevel('All', this)">All levels</button>
+            <button class="filter-btn" type="button" onclick="setLevel('Beginner', this)">Beginner</button>
+            <button class="filter-btn" type="button" onclick="setLevel('Intermediate', this)">Intermediate</button>
+            <button class="filter-btn" type="button" onclick="setLevel('Advanced', this)">Advanced</button>
+          </div>
+        </section>
 
+        <div id="statusBanner" class="status-banner">Loading sessions…</div>
+
+        <section id="groupsContainer" class="groups-grid" aria-live="polite"></section>
+
+        <div id="emptyState" class="empty-state" hidden>
+          <h3>🛼 No results found</h3>
+          <p>No groups match these filters. Try changing your search or day.</p>
         </div>
-      `;
-    });
+      </main>
+    </div>
 
-
-    const card = document.createElement("div");
-
-    card.className = "card";
-
-    card.innerHTML = `
-
-      <div class="card-header">
-
-        <div class="group-name">
-          <span class="group-icon">${group.icon}</span>
-          <span>${group.name}</span>
-        </div>
-
-        <a
-          class="instagram"
-          href="https://www.instagram.com/${group.instagram}/"
-          target="_blank"
-          rel="noopener"
-        >
-          Instagram
-        </a>
-
-      </div>
-
-      ${eventsHTML}
-
-    `;
-
-    container.appendChild(card);
-
-  });
-
-
-  empty.style.display =
-    visibleGroups === 0 ? "block" : "none";
-}
-
-
-render();
-
-</script>
-
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
